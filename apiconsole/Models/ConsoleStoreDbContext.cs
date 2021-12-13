@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using apiconsole.Models;
 using apiconsole.Models.Repair;
+using apiconsole.Models.CollectionCentre;
 
 namespace consolestoreapi.Models
 {
@@ -31,6 +32,7 @@ namespace consolestoreapi.Models
         public DbSet<ProductsToView> ProductsToView { get; set; }
         public DbSet<MainProductsToView> MainProductToView { get; set; }
         public DbSet<Defect> Defect { get; set; }
-  
+        public DbSet<CollectionItem> CollectionItem { get; set; }
+        public DbSet<Images> Images { get; set; }
     }
 }

@@ -16,8 +16,59 @@ namespace apiconsole.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.8")
+                .HasAnnotation("ProductVersion", "5.0.12")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("apiconsole.Models.CollectionCentre.CollectionItem", b =>
+                {
+                    b.Property<int>("CollectionItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ImageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductToViewId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductsToViewModlesToViewId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("WithController")
+                        .HasColumnType("bit");
+
+                    b.HasKey("CollectionItemId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("ProductsToViewModlesToViewId");
+
+                    b.ToTable("CollectionItem");
+                });
+
+            modelBuilder.Entity("apiconsole.Models.CollectionCentre.Images", b =>
+                {
+                    b.Property<int>("ImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CollectionItemId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageSrc")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ImageId");
+
+                    b.HasIndex("CollectionItemId");
+
+                    b.ToTable("Images");
+                });
 
             modelBuilder.Entity("apiconsole.Models.ProductsToView", b =>
                 {
@@ -322,6 +373,32 @@ namespace apiconsole.Migrations
                     b.ToTable("Repair");
                 });
 
+            modelBuilder.Entity("apiconsole.Models.CollectionCentre.CollectionItem", b =>
+                {
+                    b.HasOne("consolestoreapi.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("apiconsole.Models.ProductsToView", "ProductsToView")
+                        .WithMany()
+                        .HasForeignKey("ProductsToViewModlesToViewId");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("ProductsToView");
+                });
+
+            modelBuilder.Entity("apiconsole.Models.CollectionCentre.Images", b =>
+                {
+                    b.HasOne("apiconsole.Models.CollectionCentre.CollectionItem", "CollectionItem")
+                        .WithMany("Images")
+                        .HasForeignKey("CollectionItemId");
+
+                    b.Navigation("CollectionItem");
+                });
+
             modelBuilder.Entity("apiconsole.Models.ProductsToView", b =>
                 {
                     b.HasOne("consolestoreapi.Models.Category", "Category")
@@ -441,6 +518,11 @@ namespace apiconsole.Migrations
                     b.Navigation("ProductsToView");
 
                     b.Navigation("ShippingMetod");
+                });
+
+            modelBuilder.Entity("apiconsole.Models.CollectionCentre.CollectionItem", b =>
+                {
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("consolestoreapi.Models.Order", b =>
