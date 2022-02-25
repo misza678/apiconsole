@@ -10,10 +10,11 @@ namespace consolestoreapi.Models
     public class Category
     {
         [Key]
-        public int CategoryId { get; set; }
+        public int CategoryID { get; set; }
         [Column(TypeName = "nvarchar(20)")]
+        [Required]
         public string Name { get; set; }
-
+        
 
 
     }

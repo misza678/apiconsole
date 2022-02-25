@@ -1,4 +1,5 @@
-﻿using System;
+﻿using apiconsole.Models.Repair;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,8 +12,10 @@ namespace consolestoreapi.Models
     {
 
         [Key]
-        public int CompanyId { get; set; }
+        public int CompanyID { get; set; }
         [Column(TypeName = "nvarchar(30)")]
+        [Required]
         public string Name { get; set; }
+
     }
 }

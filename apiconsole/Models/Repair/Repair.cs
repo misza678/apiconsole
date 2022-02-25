@@ -13,14 +13,18 @@ namespace consolestoreapi.Models
         public class Repair
         {
             [Key]
-            public int RepairId { get; set; }      
-            public int ProductToViewId { get; set; }
-            public ProductsToView ProductsToView { get; set; }
-            public int ShippingMetodId { get; set; }
+            public int RepairID { get; set; }
+        [Required]
+        public int ProductID { get; set; }
+            public Product Product { get; set; }
+        [Required]
+        public int ShippingMetodID { get; set; }
             public ShippingMetod ShippingMetod { get; set; }
-            public int CustomerId { get; set; }
+        [Required]
+        public int CustomerID { get; set; }
             public Customer Customer { get; set; }
-            public int DefefectId { get; set; }
+        [Required]
+        public int DefectID { get; set; }
             public Defect Defect { get; set; }
             [Column(TypeName = "decimal(6,2)")]
             public decimal Price { get; set; }

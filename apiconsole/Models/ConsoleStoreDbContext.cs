@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 using apiconsole.Models;
 using apiconsole.Models.Repair;
 using apiconsole.Models.CollectionCentre;
+using apiconsole.IdentityAuth;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace consolestoreapi.Models
 {
-    public class ConsoleStoreDbContext:DbContext
+    public class ConsoleStoreDbContext:IdentityDbContext<ApplicationUser>
     {
         public ConsoleStoreDbContext(DbContextOptions<ConsoleStoreDbContext>options):base(options)
         {
@@ -27,12 +29,23 @@ namespace consolestoreapi.Models
         public DbSet<Address> Address { get; set; }
         public DbSet<ShippingMetod> ShippingMetod { get; set; }
         public DbSet<Repair> Repair { get; set; }
-        public DbSet<OrdersProducts> OrdersProducts { get; set; }
-        public DbSet<Order> Order { get; set; }
-        public DbSet<ProductsToView> ProductsToView { get; set; }
-        public DbSet<MainProductsToView> MainProductToView { get; set; }
+        public DbSet<Product> Products { get; set; }
         public DbSet<Defect> Defect { get; set; }
         public DbSet<CollectionItem> CollectionItem { get; set; }
         public DbSet<Images> Images { get; set; }
+        public DbSet<Model> Models { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<Model>().HasMany(p => p.Defects).WithMany(p => p.Models).UsingEntity<DefectModel>(j => j.HasOne(pt => pt.Defect).WithMany(t => t.DefectModels).HasForeignKey(pt => pt.DefectID),
+            j => j.HasOne(pt => pt.Model).WithMany(t => t.DefectModels).HasForeignKey(pt => pt.ModelID),
+            j => { j.HasKey(t => new { t.ModelID, t.DefectID }); 
+            });
+        }
+
+        public DbSet<apiconsole.Models.Repair.DefectModel> DefectModel { get; set; }
+       
+
     }
 }

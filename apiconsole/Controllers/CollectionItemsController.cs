@@ -47,7 +47,7 @@ namespace apiconsole.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCollectionItem(int id, CollectionItem collectionItem)
         {
-            if (id != collectionItem.CollectionItemId)
+            if (id != collectionItem.CollectionItemID)
             {
                 return BadRequest();
             }
@@ -81,7 +81,7 @@ namespace apiconsole.Controllers
             _context.CollectionItem.Add(collectionItem);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCollectionItem", new { id = collectionItem.CollectionItemId }, collectionItem);
+            return CreatedAtAction("GetCollectionItem", new { id = collectionItem.CollectionItemID }, collectionItem);
         }
 
         // DELETE: api/CollectionItems/5
@@ -102,7 +102,7 @@ namespace apiconsole.Controllers
 
         private bool CollectionItemExists(int id)
         {
-            return _context.CollectionItem.Any(e => e.CollectionItemId == id);
+            return _context.CollectionItem.Any(e => e.CollectionItemID == id);
         }
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using consolestoreapi.Models;
 
 namespace apiconsole.Migrations
 {
     [DbContext(typeof(ConsoleStoreDbContext))]
-    partial class ConsoleStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220222161424_model2")]
+    partial class model2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -291,7 +293,7 @@ namespace apiconsole.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("Models");
+                    b.ToTable("Model");
                 });
 
             modelBuilder.Entity("apiconsole.Models.Repair.Defect", b =>
@@ -308,21 +310,6 @@ namespace apiconsole.Migrations
                     b.HasKey("DefectID");
 
                     b.ToTable("Defect");
-                });
-
-            modelBuilder.Entity("apiconsole.Models.Repair.DefectModel", b =>
-                {
-                    b.Property<int>("ModelID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DefectID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ModelID", "DefectID");
-
-                    b.HasIndex("DefectID");
-
-                    b.ToTable("DefectModel");
                 });
 
             modelBuilder.Entity("apiconsole.Models.Repair.Product", b =>
@@ -601,25 +588,6 @@ namespace apiconsole.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("apiconsole.Models.Repair.DefectModel", b =>
-                {
-                    b.HasOne("apiconsole.Models.Repair.Defect", "Defect")
-                        .WithMany("DefectModels")
-                        .HasForeignKey("DefectID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("apiconsole.Models.Model", "Model")
-                        .WithMany("DefectModels")
-                        .HasForeignKey("ModelID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Defect");
-
-                    b.Navigation("Model");
-                });
-
             modelBuilder.Entity("apiconsole.Models.Repair.Product", b =>
                 {
                     b.HasOne("consolestoreapi.Models.Company", "Company")
@@ -680,16 +648,6 @@ namespace apiconsole.Migrations
             modelBuilder.Entity("apiconsole.Models.CollectionCentre.CollectionItem", b =>
                 {
                     b.Navigation("Images");
-                });
-
-            modelBuilder.Entity("apiconsole.Models.Model", b =>
-                {
-                    b.Navigation("DefectModels");
-                });
-
-            modelBuilder.Entity("apiconsole.Models.Repair.Defect", b =>
-                {
-                    b.Navigation("DefectModels");
                 });
 
             modelBuilder.Entity("apiconsole.Models.Repair.Product", b =>

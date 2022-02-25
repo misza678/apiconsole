@@ -5,53 +5,54 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using apiconsole.Models.Repair;
 using consolestoreapi.Models;
 
 namespace apiconsole.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RepairsController : ControllerBase
+    public class ProductsController : ControllerBase
     {
         private readonly ConsoleStoreDbContext _context;
 
-        public RepairsController(ConsoleStoreDbContext context)
+        public ProductsController(ConsoleStoreDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Repairs
+        // GET: api/Products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Repair>>> GetRepair()
+        public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
         {
-            return await _context.Repair.ToListAsync();
+            return await _context.Product.ToListAsync();
         }
 
-        // GET: api/Repairs/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Repair>> GetRepair(int id)
+        // GET: api/Products/5
+        [HttpGet("{CompanyName}")]
+        public async Task<ActionResult<Product>> GetProduct(string CompanyName)
         {
-            var repair = await _context.Repair.FindAsync(id);
+            var product = await _context.Product.Include(c=>c.Company).Where(p=>p.Company.Name==CompanyName).ToListAsync();
 
-            if (repair == null)
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return repair;
+            return Ok(product);
         }
 
-        // PUT: api/Repairs/5
+        // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRepair(int id, Repair repair)
+        public async Task<IActionResult> PutProduct(int id, Product product)
         {
-            if (id != repair.RepairID)
+            if (id != product.ProductID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(repair).State = EntityState.Modified;
+            _context.Entry(product).State = EntityState.Modified;
 
             try
             {
@@ -59,7 +60,7 @@ namespace apiconsole.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!RepairExists(id))
+                if (!ProductExists(id))
                 {
                     return NotFound();
                 }
@@ -72,36 +73,36 @@ namespace apiconsole.Controllers
             return NoContent();
         }
 
-        // POST: api/Repairs
+        // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Repair>> PostRepair(Repair repair)
+        public async Task<ActionResult<Product>> PostProduct(Product product)
         {
-            _context.Repair.Add(repair);
+            _context.Product.Add(product);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetRepair", new { id = repair.RepairID }, repair);
+            return CreatedAtAction("GetProduct", new { id = product.ProductID }, product);
         }
 
-        // DELETE: api/Repairs/5
+        // DELETE: api/Products/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRepair(int id)
+        public async Task<IActionResult> DeleteProduct(int id)
         {
-            var repair = await _context.Repair.FindAsync(id);
-            if (repair == null)
+            var product = await _context.Product.FindAsync(id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            _context.Repair.Remove(repair);
+            _context.Product.Remove(product);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool RepairExists(int id)
+        private bool ProductExists(int id)
         {
-            return _context.Repair.Any(e => e.RepairID == id);
+            return _context.Product.Any(e => e.ProductID == id);
         }
     }
 }

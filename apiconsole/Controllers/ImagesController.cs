@@ -51,7 +51,7 @@ namespace apiconsole.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutImages(int id, Images images)
         {
-            if (id != images.ImageId)
+            if (id != images.ImageID)
             {
                 return BadRequest();
             }
@@ -83,20 +83,28 @@ namespace apiconsole.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Images>> PostImages([FromForm]CollectionImages Images)
+        public ActionResult<Images> PostImages([FromForm] CollectionImages Images)
         {
-
-            foreach(IFormFile item in Images.Images)
+            try
             {
-                string stringFileName = UploadFile(item);
-                var productImage = new Images
+
+
+                foreach (IFormFile item in Images.Images)
                 {
-                    ImageSrc = stringFileName,
-                    CollectionItem = Images.CollectionItem
-                };
-                _context.Images.Add(productImage);
+                    string stringFileName = UploadFile(item);
+                    var productImage = new Images
+                    {
+                        ImageSrc = stringFileName,
+                        CollectionItem = Images.CollectionItem
+                    };
+                    _context.Images.Add(productImage);
+                }
             }
-             _context.SaveChanges();
+            catch (Exception e)
+            {
+                Console.WriteLine("{0} Exception caught.", e);
+            }
+            _context.SaveChanges();
             return NoContent();
         }
 
@@ -141,7 +149,7 @@ namespace apiconsole.Controllers
 
         private bool ImagesExists(int id)
         {
-            return _context.Images.Any(e => e.ImageId == id);
+            return _context.Images.Any(e => e.ImageID == id);
         }
     }
 }

@@ -8,16 +8,18 @@ using System.Threading.Tasks;
 
 namespace apiconsole.Models.Repair
 {
-    public class MainProductsToView
+    public class Product
     {
         [Key]
-        public int ProductsToViewId { get; set; }
+        public int ProductID { get; set; }
         [Column(TypeName = "nvarchar(40)")]
+        [Required]
         public string Name { get; set; }
-        public int CompanyId { get; set; }
+        [Required]
+        public int CompanyID { get; set; }
         public Company Company { get; set; }
+        [Required]
         public string PhotoSRC { get; set; }
-
-       
+        public ICollection<Model> Model { get; set; }
     }
 }

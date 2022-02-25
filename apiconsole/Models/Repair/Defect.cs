@@ -11,10 +11,12 @@ namespace apiconsole.Models.Repair
     {
 
         [Key]
-        public int DefectId { get; set; }
+        public int DefectID { get; set; }
         [Column(TypeName = "nvarchar(60)")]
-        public string Name { get; set; }
-        public int DefectType { get; set; }     
+        [Required]
+        public string Name { get; set; }  
+        public ICollection<Model> Models { get; set; }
+        public List<DefectModel> DefectModels { get; set; }
     }
 }
  

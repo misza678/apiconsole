@@ -1,4 +1,5 @@
-﻿using consolestoreapi.Models;
+﻿using apiconsole.Models.Repair;
+using consolestoreapi.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -12,13 +13,16 @@ namespace apiconsole.Models.CollectionCentre
     public class CollectionItem
     {
         [Key]
-        public int CollectionItemId { get; set; }
-        public int ImageId { get; set; }
-        public ICollection<Images> Images { get; set; }  
-        public int ProductToViewId { get; set; }
-        public ProductsToView ProductsToView { get; set; }
-        public int CustomerId { get; set; }
+        public int CollectionItemID { get; set; }
+        public int ImageID { get; set; }
+        public ICollection<Images> Images { get; set; }
+        [Required]
+        public int ProductID { get; set; }
+        public Product Product { get; set; }
+        [Required]
+        public int CustomerID { get; set; }
         public Customer Customer { get; set; }
+        [Required]
         public bool WithController { get; set; }
     }
 }   

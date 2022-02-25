@@ -11,7 +11,8 @@ namespace apiconsole.Models.CollectionCentre
     public class Images
     {
         [Key]
-        public int ImageId { get; set; }
+        public int ImageID { get; set; }
+        [Required]
         public string ImageSrc { get; set; }
         public CollectionItem CollectionItem { get; set; }
     }

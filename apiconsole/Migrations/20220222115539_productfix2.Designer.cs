@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using consolestoreapi.Models;
 
 namespace apiconsole.Migrations
 {
     [DbContext(typeof(ConsoleStoreDbContext))]
-    partial class ConsoleStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220222115539_productfix2")]
+    partial class productfix2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,7 +256,6 @@ namespace apiconsole.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ImageSrc")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ImageID");
@@ -271,27 +272,48 @@ namespace apiconsole.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CategoryID")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("PhotoSRC")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProductID")
+                    b.Property<int?>("ProductID")
                         .HasColumnType("int");
 
                     b.HasKey("ModelID");
 
-                    b.HasIndex("CategoryID");
-
                     b.HasIndex("ProductID");
 
-                    b.ToTable("Models");
+                    b.ToTable("Model");
+                });
+
+            modelBuilder.Entity("apiconsole.Models.Product", b =>
+                {
+                    b.Property<int>("ProductID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CategoryID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompanyID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(40)");
+
+                    b.Property<string>("PhotoSRC")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ProductID");
+
+                    b.HasIndex("CategoryID");
+
+                    b.HasIndex("CompanyID");
+
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("apiconsole.Models.Repair.Defect", b =>
@@ -302,52 +324,11 @@ namespace apiconsole.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(60)");
 
                     b.HasKey("DefectID");
 
                     b.ToTable("Defect");
-                });
-
-            modelBuilder.Entity("apiconsole.Models.Repair.DefectModel", b =>
-                {
-                    b.Property<int>("ModelID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DefectID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ModelID", "DefectID");
-
-                    b.HasIndex("DefectID");
-
-                    b.ToTable("DefectModel");
-                });
-
-            modelBuilder.Entity("apiconsole.Models.Repair.Product", b =>
-                {
-                    b.Property<int>("ProductID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CompanyID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(40)");
-
-                    b.Property<string>("PhotoSRC")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ProductID");
-
-                    b.HasIndex("CompanyID");
-
-                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("apiconsole.Models.ShippingMetod", b =>
@@ -358,11 +339,9 @@ namespace apiconsole.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PhotoSRC")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ShippingMetodID");
@@ -405,7 +384,6 @@ namespace apiconsole.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(20)");
 
                     b.HasKey("CategoryID");
@@ -421,7 +399,6 @@ namespace apiconsole.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(30)");
 
                     b.HasKey("CompanyID");
@@ -440,23 +417,19 @@ namespace apiconsole.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(20)");
+
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserID")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(12)");
 
                     b.HasKey("CustomerID");
 
@@ -562,7 +535,7 @@ namespace apiconsole.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("apiconsole.Models.Repair.Product", "Product")
+                    b.HasOne("apiconsole.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -584,49 +557,26 @@ namespace apiconsole.Migrations
 
             modelBuilder.Entity("apiconsole.Models.Model", b =>
                 {
+                    b.HasOne("apiconsole.Models.Product", null)
+                        .WithMany("Model")
+                        .HasForeignKey("ProductID");
+                });
+
+            modelBuilder.Entity("apiconsole.Models.Product", b =>
+                {
                     b.HasOne("consolestoreapi.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("apiconsole.Models.Repair.Product", "Product")
-                        .WithMany("Model")
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("apiconsole.Models.Repair.DefectModel", b =>
-                {
-                    b.HasOne("apiconsole.Models.Repair.Defect", "Defect")
-                        .WithMany("DefectModels")
-                        .HasForeignKey("DefectID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("apiconsole.Models.Model", "Model")
-                        .WithMany("DefectModels")
-                        .HasForeignKey("ModelID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Defect");
-
-                    b.Navigation("Model");
-                });
-
-            modelBuilder.Entity("apiconsole.Models.Repair.Product", b =>
-                {
                     b.HasOne("consolestoreapi.Models.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Category");
 
                     b.Navigation("Company");
                 });
@@ -656,7 +606,7 @@ namespace apiconsole.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("apiconsole.Models.Repair.Product", "Product")
+                    b.HasOne("apiconsole.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -682,17 +632,7 @@ namespace apiconsole.Migrations
                     b.Navigation("Images");
                 });
 
-            modelBuilder.Entity("apiconsole.Models.Model", b =>
-                {
-                    b.Navigation("DefectModels");
-                });
-
-            modelBuilder.Entity("apiconsole.Models.Repair.Defect", b =>
-                {
-                    b.Navigation("DefectModels");
-                });
-
-            modelBuilder.Entity("apiconsole.Models.Repair.Product", b =>
+            modelBuilder.Entity("apiconsole.Models.Product", b =>
                 {
                     b.Navigation("Model");
                 });

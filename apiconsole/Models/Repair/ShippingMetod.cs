@@ -11,9 +11,11 @@ namespace apiconsole.Models
     {
 
         [Key]
-        public int ShippingMetodId { get; set; }
+        public int ShippingMetodID { get; set; }
         [Column(TypeName = "nvarchar(50)")]
+        [Required]
         public string Name { get; set; }
+        [Required]
         public string PhotoSRC { get; set; }
     }
 }

@@ -10,15 +10,22 @@ namespace consolestoreapi.Models
     public class Customer
     {
         [Key]
-        public int CustomerId { get; set; }
+        public int CustomerID { get; set; }
         [Column(TypeName ="nvarchar(20)")]
+        [Required]
         public string Name { get; set; }
-        [Column(TypeName = "nvarchar(20)")]
-        public string LastName { get; set; }
         [Column(TypeName = "nvarchar(50)")]
+        [Required]
+        public string LastName { get; set; }
+      
+        [Required]
+     
         public string Email { get; set; }
-        [Column(TypeName = "nvarchar(12)")]
-        public string Phone { get; set; }  
+      
+        public string UserID { get; set; }
+        [Required]
+        public string Phone { get; set; }
+        [Required]
         public int AddressID { get; set; }
         public Address Address { get; set; }
     }
