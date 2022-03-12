@@ -21,9 +21,6 @@ namespace apiconsole.Controllers
         }
 
         // GET: api/Addresses
-       
-
-        // GET: api/Addresses/5
         [HttpGet]
         public async Task<ActionResult<Address>> GetAddress()
         {
@@ -91,21 +88,7 @@ namespace apiconsole.Controllers
             return CreatedAtAction("GetAddress", new { id = address.AddressID }, address);
         }
 
-        // DELETE: api/Addresses/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAddress(int id)
-        {
-            var address = await _context.Address.FindAsync(id);
-            if (address == null)
-            {
-                return NotFound();
-            }
-
-            _context.Address.Remove(address);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
+       
 
         private bool AddressExists(int id)
         {

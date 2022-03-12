@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using consolestoreapi.Models;
 
 namespace apiconsole.Migrations
 {
     [DbContext(typeof(ConsoleStoreDbContext))]
-    partial class ConsoleStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220228132338_productModelFix")]
+    partial class productModelFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,9 +233,6 @@ namespace apiconsole.Migrations
                     b.Property<int>("ModelID")
                         .HasColumnType("int");
 
-                    b.Property<int>("StatusID")
-                        .HasColumnType("int");
-
                     b.Property<bool>("WithController")
                         .HasColumnType("bit");
 
@@ -242,8 +241,6 @@ namespace apiconsole.Migrations
                     b.HasIndex("CustomerID");
 
                     b.HasIndex("ModelID");
-
-                    b.HasIndex("StatusID");
 
                     b.ToTable("CollectionItem");
                 });
@@ -297,22 +294,6 @@ namespace apiconsole.Migrations
                     b.HasIndex("ProductID");
 
                     b.ToTable("Models");
-                });
-
-            modelBuilder.Entity("apiconsole.Models.Other.Status", b =>
-                {
-                    b.Property<int>("StatusID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(20)");
-
-                    b.HasKey("StatusID");
-
-                    b.ToTable("Status");
                 });
 
             modelBuilder.Entity("apiconsole.Models.Repair.Defect", b =>
@@ -511,9 +492,6 @@ namespace apiconsole.Migrations
                     b.Property<int>("ShippingMetodID")
                         .HasColumnType("int");
 
-                    b.Property<int>("StatusID")
-                        .HasColumnType("int");
-
                     b.HasKey("RepairID");
 
                     b.HasIndex("CustomerID");
@@ -523,8 +501,6 @@ namespace apiconsole.Migrations
                     b.HasIndex("ModelID");
 
                     b.HasIndex("ShippingMetodID");
-
-                    b.HasIndex("StatusID");
 
                     b.ToTable("Repair");
                 });
@@ -594,17 +570,9 @@ namespace apiconsole.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("apiconsole.Models.Other.Status", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Customer");
 
                     b.Navigation("Model");
-
-                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("apiconsole.Models.CollectionCentre.Images", b =>
@@ -702,12 +670,6 @@ namespace apiconsole.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("apiconsole.Models.Other.Status", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Customer");
 
                     b.Navigation("Defect");
@@ -715,8 +677,6 @@ namespace apiconsole.Migrations
                     b.Navigation("Model");
 
                     b.Navigation("ShippingMetod");
-
-                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("apiconsole.Models.CollectionCentre.CollectionItem", b =>

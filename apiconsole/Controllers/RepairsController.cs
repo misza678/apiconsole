@@ -31,14 +31,27 @@ namespace apiconsole.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Repair>> GetRepair(int id)
         {
-            var repair = await _context.Repair.FindAsync(id);
-
-            if (repair == null)
+            
+            var userId = this.User.Identity.Name;
+            if (userId == null)
+            {
+                var repair = await _context.Repair.FindAsync(id);
+                if (repair == null)
+                {
+                    return NotFound();
+                }
+              
+                return repair;
+            }
+            var confirmedRepair = await _context.Repair.Include(c => c.Customer).Where(c => c.Customer.UserID == userId).ToListAsync();
+            if (confirmedRepair == null)
             {
                 return NotFound();
             }
 
-            return repair;
+
+
+            return Ok(confirmedRepair);
         }
 
         // PUT: api/Repairs/5

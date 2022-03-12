@@ -20,13 +20,6 @@ namespace apiconsole.Controllers
             _context = context;
         }
 
-        // GET: api/Customers
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
-        {
-            return await _context.Customers.ToListAsync();
-        }
-
         // GET: api/Customers/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetCustomer(int id)
@@ -125,21 +118,6 @@ namespace apiconsole.Controllers
             return CreatedAtAction("GetCustomer", new { id = customer.CustomerID }, customer);
         }
 
-        // DELETE: api/Customers/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCustomer(int id)
-        {
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
-            _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
 
         private bool CustomerExists(int id)
         {

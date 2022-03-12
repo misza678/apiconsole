@@ -42,6 +42,9 @@ namespace consolestoreapi.Models
             j => j.HasOne(pt => pt.Model).WithMany(t => t.DefectModels).HasForeignKey(pt => pt.ModelID),
             j => { j.HasKey(t => new { t.ModelID, t.DefectID }); 
             });
+            builder.Entity<CollectionItem>()
+       .HasMany(c => c.Images)
+       .WithOne(e => e.CollectionItem);
         }
 
         public DbSet<apiconsole.Models.Repair.DefectModel> DefectModel { get; set; }

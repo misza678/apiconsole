@@ -1,4 +1,5 @@
 ﻿using apiconsole.Models;
+using apiconsole.Models.Other;
 using apiconsole.Models.Repair;
 using System;
 using System.Collections.Generic;
@@ -15,8 +16,8 @@ namespace consolestoreapi.Models
             [Key]
             public int RepairID { get; set; }
         [Required]
-        public int ProductID { get; set; }
-            public Product Product { get; set; }
+        public int ModelID { get; set; }
+            public Model Model { get; set; }
         [Required]
         public int ShippingMetodID { get; set; }
             public ShippingMetod ShippingMetod { get; set; }
@@ -30,6 +31,8 @@ namespace consolestoreapi.Models
             public decimal Price { get; set; }
             [Column(TypeName = "text")]
             public string Description { get; set; }
+        public int StatusID { get; set; }
+        public Status Status { get; set; }
         }
     
 }
