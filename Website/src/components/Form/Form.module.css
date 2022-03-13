@@ -1,0 +1,84 @@
+.Container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 80%;
+  height: 1200px;
+  background-color: #f4f6f8;
+  border-radius: 100px;
+  display: flex;
+  justify-content: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.FormContainer form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.FormContainer form input {
+  margin-top: 10px;
+  border: 1px solid #242c37;
+  border-radius: 999px;
+  height: 50px;
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+  text-align: center;
+}
+
+.FormContainer form [type="submit"] {
+  background-image: linear-gradient(160deg, #8ceabb 0%, #378f7b 100%);
+  color: #fff;
+  margin-top: 0;
+  width: 50%;
+  cursor: pointer;
+  margin-left: 20px;
+}
+.Edit {
+  background-image: linear-gradient(160deg, #8ceabb 0%, #378f7b 100%);
+  color: #fff;
+  cursor: pointer;
+  border: 1px solid #242c37;
+  border-radius: 999px;
+  height: 50px;
+  width: 50%;
+  padding-left: 20px;
+  padding-right: 20px;
+  text-align: center;
+}
+.Buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.FormContainer form [type="text"] {
+  margin-top: 10px;
+  border: 1px solid #242c37;
+  border-radius: 22px;
+  height: 50px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 300px;
+  padding-left: 20px;
+  padding-right: 20px;
+  text-align: center;
+}
+.Login {
+  padding-left: 50px;
+}
+
+.Header {
+  color: black;
+  font-weight: 900;
+  font-size: 1.4rem;
+  margin-top: 10%;
+}

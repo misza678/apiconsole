@@ -1,0 +1,14 @@
+.MainSection {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  max-width: 1600px;
+  margin-top: 3%;
+}
+.Background {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f4f6f8;
+}

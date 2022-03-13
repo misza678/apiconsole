@@ -1,0 +1,11 @@
+.MainSection {
+  height: fit-content;
+  font-family: "Open Sans", sans-serif;
+  line-height: 1.7em;
+  font-weight: 500;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}

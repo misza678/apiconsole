@@ -1,0 +1,126 @@
+.SectionContainer {
+  width: 100%;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+
+  text-align: left;
+  margin: auto;
+  font-family: "Titillium Web", sans-serif;
+  font-weight: 650;
+  padding-top: 50px;
+  padding-bottom: 150px;
+}
+
+.form {
+  flex-direction: column;
+  display: flex;
+  max-width: 500px;
+
+  background: #f4f7f8;
+  border-radius: 8px;
+  padding: 30px;
+  font-size: 1.3rem;
+  -webkit-box-shadow: 5px 3px 10px -6px rgba(0, 0, 0, 0.9);
+  box-shadow: 5px 3px 10px -6px rgba(0, 0, 0, 0.4);
+}
+
+.header {
+  font-size: 3rem;
+  text-align: center;
+  font-family: "Hina Mincho", serif;
+  color: white;
+  padding: 200px;
+}
+
+.form textarea {
+  resize: vertical;
+  max-width: 500px;
+  min-height: 100px;
+}
+
+.form input,
+textarea {
+  margin-bottom: 30px;
+  -webkit-box-shadow: 5px 3px 10px -6px rgba(0, 0, 0, 0.9);
+  box-shadow: 5px 3px 10px -6px rgba(0, 0, 0, 0.4);
+  border: 2px solid #d9e4ff;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.name {
+  display: flex;
+}
+.name input {
+  width: 200px;
+}
+.form fieldset {
+  display: flex;
+  flex-direction: column;
+  border: none;
+  margin: 0;
+}
+
+.button {
+  background-color: blue;
+  color: white;
+  justify-content: center;
+  padding: 15px;
+  font-size: 1.4rem;
+}
+
+.star {
+  color: red;
+}
+
+.Info {
+  margin-left: 50px;
+  background: hsl(180, 6%, 93%);
+  border-radius: 8px;
+  padding: 30px;
+  font-size: 1rem;
+  -webkit-box-shadow: 5px 3px 10px -6px rgba(0, 0, 0, 0.9);
+  box-shadow: 5px 3px 10px -6px rgba(0, 0, 0, 0.4);
+
+  font-family: "Hina Mincho", serif;
+}
+
+.question p {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 1.3rem;
+}
+
+.margin {
+  width: 70%;
+
+  border: 1px solid black;
+}
+
+.qcontainer {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+
+  background: hsl(195, 22%, 96%);
+}
+
+.button:hover,
+.button:focus {
+  background-color: #fb8332;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+  cursor: pointer;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+.button:active {
+  background-color: #c85000;
+  box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
+  transform: translateY(0);
+}

@@ -1,0 +1,31 @@
+.CompanyContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1000px;
+  flex-wrap: wrap;
+  width: 90%;
+  padding: 50px;
+}
+.Header {
+  color: white;
+}
+.Logo {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.Logo h1 {
+  font-weight: 900;
+  font-size: 2rem;
+  color: white;
+}
+
+.Card {
+  background-color: white;
+  padding: 50px;
+  border-radius: 10px;
+  cursor: pointer;
+}

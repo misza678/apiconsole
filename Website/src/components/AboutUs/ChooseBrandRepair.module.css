@@ -1,0 +1,21 @@
+.CompanyContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1000px;
+  width: 100%;
+  padding: 50px;
+}
+
+.Logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.Logo h1 {
+  font-weight: 900;
+  font-size: 2rem;
+}

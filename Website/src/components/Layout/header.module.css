@@ -1,0 +1,91 @@
+.header {
+  font-family: "Titillium Web", sans-serif;
+  max-height: 150px;
+  z-index: 0;
+  width: 100%;
+}
+
+.headerLogo {
+  font-weight: 600;
+}
+
+nav {
+  max-height: 100px;
+
+  justify-content: center;
+  max-width: 1600px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: auto;
+}
+
+nav a,
+ul {
+  font-size: 1.2rem;
+  flex: 2;
+  display: flex;
+}
+.menu {
+  flex: 1.5;
+}
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+}
+.menu li {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.list {
+  position: absolute;
+  margin-top: 150px;
+  margin-left: -200px;
+  visibility: hidden;
+  border: 2px solid black;
+  display: flex;
+  background-color: white;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  height: 120px;
+}
+
+nav li {
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+nav img {
+  max-height: 60px;
+}
+
+nav ul li:hover > ul {
+  opacity: 1;
+  visibility: visible;
+  cursor: pointer;
+}
+nav a {
+  color: black;
+  text-decoration: none;
+}
+
+nav li > a:hover {
+  color: red;
+  cursor: pointer;
+}
+
+.container {
+  min-height: 100%;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}

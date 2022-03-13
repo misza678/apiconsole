@@ -1,0 +1,45 @@
+.SectionContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #f9f9f9;
+  width: 100%;
+  text-align: center;
+  padding-bottom: 50px;
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.SectionContainer a {
+  background-color: #00b1dd;
+  color: white;
+  padding: 20px;
+  font-family: "Poppins", Helvetica, Arial, Lucida, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none;
+  margin-top: 30px;
+}
+
+.TextContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  max-width: 1600px;
+}
+
+.FirstColumn {
+  padding-right: 20px;
+  width: calc(40% - 50px);
+}
+
+.SecondColumn {
+  padding-left: 20px;
+  width: calc(40% - 50px);
+}
+
+.HeaderContainer h1 {
+  color: #06333d;
+  font-size: 3em;
+}

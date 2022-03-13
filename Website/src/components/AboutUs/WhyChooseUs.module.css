@@ -1,0 +1,40 @@
+.SectionContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #021c22;
+  width: 100%;
+  color: white;
+  padding-top: 30px;
+  padding-bottom: 70px;
+}
+.HeaderContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+
+  font-size: 1.5rem;
+}
+
+.CardContainer {
+  padding-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  max-width: 1600px;
+}
+
+.Card {
+  width: 30%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  background-color: #11292f;
+  margin: 20px;
+  border-radius: 5px;
+  text-align: center;
+  padding: 20px;
+}
