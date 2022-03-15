@@ -8,6 +8,7 @@ using apiconsole.Models.Repair;
 using apiconsole.Models.CollectionCentre;
 using apiconsole.IdentityAuth;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using apiconsole.Models.Other;
 
 namespace consolestoreapi.Models
 {
@@ -48,6 +49,8 @@ namespace consolestoreapi.Models
         }
 
         public DbSet<apiconsole.Models.Repair.DefectModel> DefectModel { get; set; }
+
+        public DbSet<apiconsole.Models.Other.Status> Status { get; set; }
        
 
     }

@@ -24,7 +24,7 @@ namespace apiconsole.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Repair>>> GetRepair()
         {
-            return await _context.Repair.ToListAsync();
+            return await _context.Repair.Include(c => c.Customer).Include(c => c.Status).Include(c => c.Model).ToListAsync();
         }
 
         // GET: api/Repairs/5
@@ -43,7 +43,7 @@ namespace apiconsole.Controllers
               
                 return repair;
             }
-            var confirmedRepair = await _context.Repair.Include(c => c.Customer).Where(c => c.Customer.UserID == userId).ToListAsync();
+            var confirmedRepair = await _context.Repair.Include(c => c.Customer).Where(c => c.Customer.UserID == userId).Include(c=>c.Status).Include(c=>c.Model).ToListAsync();
             if (confirmedRepair == null)
             {
                 return NotFound();

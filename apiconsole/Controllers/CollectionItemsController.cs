@@ -25,21 +25,25 @@ namespace apiconsole.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CollectionItem>>> GetCollectionItem()
         {
-            return await _context.CollectionItem.ToListAsync();
+            return  await _context.CollectionItem.Include(c => c.Customer).Include(c => c.Status).Include(c => c.Model).ToListAsync();
         }
 
         // GET: api/CollectionItems/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CollectionItem>> GetCollectionItem(int id)
         {
-            var collectionItem = await _context.CollectionItem.FindAsync(id);
+       
 
-            if (collectionItem == null)
+            var userId = this.User.Identity.Name;
+            var confirmedRepair = await _context.CollectionItem.Include(c => c.Customer).Where(c => c.Customer.UserID == userId).Include(c => c.Status).Include(c => c.Model).ToListAsync();
+            if (confirmedRepair == null)
             {
                 return NotFound();
             }
 
-            return collectionItem;
+
+
+            return Ok(confirmedRepair);
         }
 
         // PUT: api/CollectionItems/5
