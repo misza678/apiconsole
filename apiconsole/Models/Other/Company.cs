@@ -13,7 +13,7 @@ namespace consolestoreapi.Models
 
         [Key]
         public int CompanyID { get; set; }
-        [Column(TypeName = "nvarchar(30)")]
+        [MaxLength(25)]
         [Required]
         public string Name { get; set; }
 

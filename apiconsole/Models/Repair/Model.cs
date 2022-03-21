@@ -13,7 +13,7 @@ namespace apiconsole.Models
     {
         [Key]
         public int ModelID { get; set; }
-        [Column(TypeName = "nvarchar(40)")]
+        [MaxLength(40)]
         [Required]
         public string Name { get; set; }
         [Required]

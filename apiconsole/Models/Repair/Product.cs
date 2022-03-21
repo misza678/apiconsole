@@ -12,7 +12,7 @@ namespace apiconsole.Models.Repair
     {
         [Key]
         public int ProductID { get; set; }
-        [Column(TypeName = "nvarchar(40)")]
+        [MaxLength(40)]
         [Required]
         public string Name { get; set; }
         [Required]

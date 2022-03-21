@@ -11,13 +11,13 @@ namespace consolestoreapi.Models
     {
         [Key]
         public int AddressID { get; set; }
-        [Column(TypeName = "nvarchar(45)")]
+        [MaxLength(45)]
         public string City { get; set; }
-        [Column(TypeName = "nvarchar(6)")]
+        [MaxLength(45)]
         public string PostalAddress { get; set; }
-        [Column(TypeName = "nvarchar(45)")]
+        [MaxLength(45)]
         public string Street { get; set; }
-        [Column(TypeName = "nvarchar(5)")]
+        [MaxLength(5)]
         public string HouseNumber { get; set; }
         public int FlatNumber { get; set; }
 

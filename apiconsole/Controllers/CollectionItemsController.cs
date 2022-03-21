@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using apiconsole.Models.CollectionCentre;
 using consolestoreapi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace apiconsole.Controllers
 {
@@ -22,11 +23,13 @@ namespace apiconsole.Controllers
         }
 
         // GET: api/CollectionItems
+        [Authorize(Roles = "Pracownik,Administrator")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CollectionItem>>> GetCollectionItem()
         {
             return  await _context.CollectionItem.Include(c => c.Customer).Include(c => c.Status).Include(c => c.Model).ToListAsync();
         }
+
 
         // GET: api/CollectionItems/5
         [HttpGet("{id}")]
@@ -48,6 +51,7 @@ namespace apiconsole.Controllers
 
         // PUT: api/CollectionItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Pracownik,Administrator")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCollectionItem(int id, CollectionItem collectionItem)
         {
@@ -56,7 +60,16 @@ namespace apiconsole.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(collectionItem).State = EntityState.Modified;
+            var newCollectionItem = new CollectionItem
+            {
+                CollectionItemID = collectionItem.CollectionItemID,
+                ModelID = collectionItem.ModelID,
+                CustomerID = collectionItem.CustomerID,
+                WithController = collectionItem.WithController,
+                StatusID = collectionItem.StatusID
+            };
+
+            _context.Entry(newCollectionItem).State = EntityState.Modified;
 
             try
             {
@@ -77,18 +90,29 @@ namespace apiconsole.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Pracownik,Administrator")]
         // POST: api/CollectionItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<CollectionItem>> PostCollectionItem(CollectionItem collectionItem)
         {
-            _context.CollectionItem.Add(collectionItem);
+            var newCollectionItem = new CollectionItem
+            {
+                CollectionItemID = collectionItem.CollectionItemID,
+                ModelID = collectionItem.ModelID,
+                CustomerID = collectionItem.CustomerID,
+                WithController = collectionItem.WithController,
+                StatusID = collectionItem.StatusID
+            };
+            _context.CollectionItem.Add(newCollectionItem);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCollectionItem", new { id = collectionItem.CollectionItemID }, collectionItem);
+            return CreatedAtAction("GetCollectionItem", new { id = newCollectionItem.CollectionItemID }, newCollectionItem);
         }
 
+
         // DELETE: api/CollectionItems/5
+        [Authorize(Roles = "Pracownik,Administrator")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCollectionItem(int id)
         {

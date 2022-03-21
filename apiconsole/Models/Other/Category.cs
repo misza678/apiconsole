@@ -11,7 +11,7 @@ namespace consolestoreapi.Models
     {
         [Key]
         public int CategoryID { get; set; }
-        [Column(TypeName = "nvarchar(20)")]
+        [MaxLength(20)]
         [Required]
         public string Name { get; set; }
         

@@ -12,7 +12,7 @@ namespace apiconsole.Models
 
         [Key]
         public int ShippingMetodID { get; set; }
-        [Column(TypeName = "nvarchar(50)")]
+        [MaxLength(50)]
         [Required]
         public string Name { get; set; }
         [Required]

@@ -12,7 +12,7 @@ namespace apiconsole.Models.Repair
 
         [Key]
         public int DefectID { get; set; }
-        [Column(TypeName = "nvarchar(60)")]
+        [MaxLength(60)]
         [Required]
         public string Name { get; set; }  
         public ICollection<Model> Models { get; set; }

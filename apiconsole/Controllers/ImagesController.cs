@@ -9,6 +9,7 @@ using apiconsole.Models.CollectionCentre;
 using consolestoreapi.Models;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace apiconsole.Controllers
 {
@@ -69,7 +70,7 @@ namespace apiconsole.Controllers
 
 
 
-
+        [Authorize(Roles = "Pracownik,Administrator")]
         // DELETE: api/Images/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteImages(int id)

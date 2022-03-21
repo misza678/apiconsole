@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using consolestoreapi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace apiconsole.Controllers
 {
@@ -38,6 +39,7 @@ namespace apiconsole.Controllers
                 }).ToListAsync();
 
 
+
             if (address == null)
             {
                 return NotFound();
@@ -56,7 +58,16 @@ namespace apiconsole.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(address).State = EntityState.Modified;
+            var newAddres = new Address
+            {
+                AddressID = address.AddressID,
+                Street = address.Street,
+                City = address.City,
+                HouseNumber = address.HouseNumber,
+                PostalAddress = address.PostalAddress,
+                FlatNumber = address.FlatNumber
+            };
+            _context.Entry(newAddres).State = EntityState.Modified;
 
             try
             {
@@ -76,16 +87,27 @@ namespace apiconsole.Controllers
 
             return NoContent();
         }
-
+        [Authorize(Roles = "Pracownik,Administrator,Użytkownik")]
         // POST: api/Addresses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Address>> PostAddress(Address address)
         {
-            _context.Address.Add(address);
+            var newAddres = new Address
+            {
+                AddressID = address.AddressID,
+                Street = address.Street,
+                City = address.City,
+                HouseNumber = address.HouseNumber,
+                PostalAddress = address.PostalAddress,
+                FlatNumber = address.FlatNumber
+            };
+
+
+            _context.Address.Add(newAddres);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAddress", new { id = address.AddressID }, address);
+            return CreatedAtAction("GetAddress", new { id = newAddres.AddressID }, newAddres);
         }
 
        

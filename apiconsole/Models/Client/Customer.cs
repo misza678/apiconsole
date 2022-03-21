@@ -11,19 +11,19 @@ namespace consolestoreapi.Models
     {
         [Key]
         public int CustomerID { get; set; }
-        [Column(TypeName ="nvarchar(20)")]
+        [MaxLength(20)]
         [Required]
         public string Name { get; set; }
-        [Column(TypeName = "nvarchar(50)")]
+        [MaxLength(50)]
         [Required]
         public string LastName { get; set; }
-      
         [Required]
-     
+        [MaxLength(100)]
         public string Email { get; set; }
       
         public string UserID { get; set; }
         [Required]
+        [MaxLength(12)]
         public string Phone { get; set; }
         [Required]
         public int AddressID { get; set; }

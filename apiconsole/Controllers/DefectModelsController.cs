@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using apiconsole.Models.Repair;
 using consolestoreapi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace apiconsole.Models.CollectionCentre
 {
@@ -28,11 +29,15 @@ namespace apiconsole.Models.CollectionCentre
             return await _context.DefectModel.ToListAsync();
         }
 
+
+
         // GET: api/DefectModels/5
         [HttpGet("{id}")]
         public async Task<ActionResult<DefectModel>> GetDefectModel(int id)
         {
-          
+
+
+
             var defectModel = await _context.DefectModel.Join(_context.Models.Where(a => a.ModelID == id),
                p => p.ModelID,
                s => s.ModelID, (p, s) => new
@@ -40,6 +45,8 @@ namespace apiconsole.Models.CollectionCentre
                    p.DefectID,
                    p.Defect.Name
                }).ToListAsync();
+
+ 
             if (defectModel == null)
             {
                 return NotFound();
@@ -48,6 +55,8 @@ namespace apiconsole.Models.CollectionCentre
             return Ok(defectModel);
         }
 
+
+        [Authorize(Roles = "Pracownik,Administrator")]
         // PUT: api/DefectModels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -57,8 +66,12 @@ namespace apiconsole.Models.CollectionCentre
             {
                 return BadRequest();
             }
-
-            _context.Entry(defectModel).State = EntityState.Modified;
+            var newdefectModel = new DefectModel
+            {
+                DefectID = defectModel.DefectID,
+                ModelID = defectModel.ModelID
+            };
+            _context.Entry(newdefectModel).State = EntityState.Modified;
 
             try
             {
@@ -78,20 +91,28 @@ namespace apiconsole.Models.CollectionCentre
 
             return NoContent();
         }
-
+        [Authorize(Roles = "Pracownik,Administrator")]
         // POST: api/DefectModels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<DefectModel>> PostDefectModel(DefectModel defectModel)
         {
-            _context.DefectModel.Add(defectModel);
+
+            var newdefectModel = new DefectModel
+            {
+                DefectID = defectModel.DefectID,
+                ModelID = defectModel.ModelID
+            };
+
+
+            _context.DefectModel.Add(newdefectModel);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (DefectModelExists(defectModel.ModelID))
+                if (DefectModelExists(newdefectModel.ModelID))
                 {
                     return Conflict();
                 }
@@ -101,9 +122,9 @@ namespace apiconsole.Models.CollectionCentre
                 }
             }
 
-            return CreatedAtAction("GetDefectModel", new { id = defectModel.ModelID }, defectModel);
+            return CreatedAtAction("GetDefectModel", new { id = newdefectModel.ModelID }, newdefectModel);
         }
-
+        [Authorize(Roles = "Pracownik,Administrator")]
         // DELETE: api/DefectModels/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDefectModel(int id)

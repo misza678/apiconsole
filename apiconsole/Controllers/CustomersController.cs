@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using consolestoreapi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace apiconsole.Controllers
 {
@@ -104,7 +105,7 @@ namespace apiconsole.Controllers
 
             return NoContent();
         }
-
+        [Authorize(Roles = "Pracownik,Administrator,Użytkownik")]
         // POST: api/Customers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
