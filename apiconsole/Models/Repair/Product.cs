@@ -1,4 +1,5 @@
 ﻿using consolestoreapi.Models;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

@@ -27,7 +27,7 @@ namespace apiconsole.Controllers
         }
 
 
-
+        [Authorize(Roles = "Pracownik,Administrator")]
         // GET: api/Images/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Images>> GetImages(int id)

@@ -1,8 +1,11 @@
 using apiconsole.IdentityAuth;
 using consolestoreapi.Models;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -36,12 +39,16 @@ namespace apiconsole
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers().AddFluentValidation(fv =>
+            {
+                fv.RegisterValidatorsFromAssemblyContaining<Startup>();
+            });
 
 
 
-         
+
             services.AddDbContext<ConsoleStoreDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
+
             services.AddIdentity<ApplicationUser, IdentityRole>(options=>
             {
                 options.SignIn.RequireConfirmedEmail = false;
@@ -112,7 +119,7 @@ namespace apiconsole
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1.1/swagger.json", "apiconsole v1.1"));
             }
-
+    
 
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -121,7 +128,7 @@ namespace apiconsole
             }) ;
 
 
-
+           
             app.UseHttpsRedirection();
          
             app.UseRouting();

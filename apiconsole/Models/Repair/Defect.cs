@@ -18,5 +18,8 @@ namespace apiconsole.Models.Repair
         public ICollection<Model> Models { get; set; }
         public List<DefectModel> DefectModels { get; set; }
     }
+
+
+
 }
  

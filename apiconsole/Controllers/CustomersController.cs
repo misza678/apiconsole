@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using consolestoreapi.Models;
 using Microsoft.AspNetCore.Authorization;
+using FluentValidation.Results;
 
 namespace apiconsole.Controllers
 {
@@ -76,16 +77,36 @@ namespace apiconsole.Controllers
         public async Task<IActionResult> PutCustomer(int id, Customer customer)
         {
 
-            var userId = this.User.Identity.Name;
-            customer.UserID = userId;
 
+            CustomerValidator validator = new CustomerValidator();
 
-            if (id != customer.CustomerID)
+            ValidationResult results = validator.Validate(customer);
+
+            if (!results.IsValid)
+            {
+                foreach (var failure in results.Errors)
+                {
+                    BadRequest("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
+                }
+            }
+
+            var newCustomer = new Customer()
+            {
+                CustomerID = customer.CustomerID,
+                Name = customer.Name,
+                LastName = customer.LastName,
+                Email = customer.Email,
+                UserID = this.User.Identity.Name,
+                Phone = customer.Phone,
+                AddressID = customer.AddressID,
+            };
+
+            if (id != newCustomer.CustomerID)
             {
                 return BadRequest();
             }
           
-            _context.Entry(customer).State = EntityState.Modified;
+            _context.Entry(newCustomer).State = EntityState.Modified;
 
             try
             {
@@ -105,15 +126,37 @@ namespace apiconsole.Controllers
 
             return NoContent();
         }
-        [Authorize(Roles = "Pracownik,Administrator,Użytkownik")]
+        [Authorize]
         // POST: api/Customers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
         {
-            var userId = this.User.Identity.Name;
-            customer.UserID = userId;
-            _context.Customers.Add(customer);
+            CustomerValidator validator = new CustomerValidator();
+
+            ValidationResult results = validator.Validate(customer);
+
+            if (!results.IsValid)
+            {
+                foreach (var failure in results.Errors)
+                {
+                    BadRequest("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
+                }
+            }
+
+            var newCustomer = new Customer()
+            {
+                CustomerID = customer.CustomerID,
+                Name=customer.Name,
+                LastName=customer.LastName,
+                Email=customer.Email,
+                UserID= this.User.Identity.Name,
+                Phone=customer.Phone,
+                AddressID=customer.AddressID,
+        };
+
+
+            _context.Customers.Add(newCustomer);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCustomer", new { id = customer.CustomerID }, customer);

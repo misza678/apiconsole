@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using consolestoreapi.Models;
 using Microsoft.AspNetCore.Authorization;
+using FluentValidation.Results;
 
 namespace apiconsole.Controllers
 {
@@ -28,7 +29,7 @@ namespace apiconsole.Controllers
         {
             return await _context.Repair.Include(c => c.Customer).Include(c => c.Status).Include(c => c.Model).ToListAsync();
         }
-        [Authorize(Roles = "Pracownik,Administrator")]
+        [Authorize]
         // GET: api/Repairs/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Repair>> GetRepair(int id)
@@ -51,16 +52,27 @@ namespace apiconsole.Controllers
                 return NotFound();
             }
 
-
-
             return Ok(confirmedRepair);
         }
-        [Authorize(Roles = "Pracownik,Administrator")]
+
         // PUT: api/Repairs/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Pracownik,Administrator")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRepair(int id, Repair repair)
         {
+            RepairValidator validator = new RepairValidator();
+
+            ValidationResult results = validator.Validate(repair);
+
+            if (!results.IsValid)
+            {
+
+                foreach (var failure in results.Errors)
+                {
+                    BadRequest("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
+                }
+            } 
+
             if (id != repair.RepairID)
             {
                 return BadRequest();
@@ -98,12 +110,25 @@ namespace apiconsole.Controllers
             return NoContent();
         }
 
+
         // POST: api/Repairs
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Repair>> PostRepair(Repair repair)
         {
-            var newRepair = new Repair {
+            RepairValidator validator = new RepairValidator();
+
+            ValidationResult results = validator.Validate(repair);
+
+            if (!results.IsValid)
+            {
+             
+                foreach (var failure in results.Errors)
+                {
+                    BadRequest("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
+                }
+            }
+
+                var newRepair = new Repair {
                 RepairID = repair.RepairID,
                 CustomerID = repair.CustomerID,
                 StatusID = repair.StatusID,
@@ -117,9 +142,10 @@ namespace apiconsole.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetRepair", new { id = newRepair.RepairID }, newRepair);
-        }
-        [Authorize(Roles = "Pracownik,Administrator")]
+        } 
+
         // DELETE: api/Repairs/5
+        [Authorize(Roles = "Pracownik,Administrator")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRepair(int id)
         {
@@ -128,7 +154,6 @@ namespace apiconsole.Controllers
             {
                 return NotFound();
             }
-
             _context.Repair.Remove(repair);
             await _context.SaveChangesAsync();
 

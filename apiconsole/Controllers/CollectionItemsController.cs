@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using apiconsole.Models.CollectionCentre;
 using consolestoreapi.Models;
 using Microsoft.AspNetCore.Authorization;
+using FluentValidation.Results;
 
 namespace apiconsole.Controllers
 {
@@ -55,6 +56,19 @@ namespace apiconsole.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCollectionItem(int id, CollectionItem collectionItem)
         {
+            CollectionItemValidator validator = new CollectionItemValidator();
+
+            ValidationResult results = validator.Validate(collectionItem);
+
+            if (!results.IsValid)
+            {
+
+                foreach (var failure in results.Errors)
+                {
+                    BadRequest("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
+                }
+            }
+
             if (id != collectionItem.CollectionItemID)
             {
                 return BadRequest();
@@ -90,12 +104,25 @@ namespace apiconsole.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "Pracownik,Administrator")]
+        
         // POST: api/CollectionItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<CollectionItem>> PostCollectionItem(CollectionItem collectionItem)
         {
+            CollectionItemValidator validator = new CollectionItemValidator();
+
+            ValidationResult results = validator.Validate(collectionItem);
+
+            if (!results.IsValid)
+            {
+
+                foreach (var failure in results.Errors)
+                {
+                    BadRequest("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
+                }
+            }
+
             var newCollectionItem = new CollectionItem
             {
                 CollectionItemID = collectionItem.CollectionItemID,

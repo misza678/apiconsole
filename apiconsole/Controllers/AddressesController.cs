@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using consolestoreapi.Models;
 using Microsoft.AspNetCore.Authorization;
+using FluentValidation.Results;
 
 namespace apiconsole.Controllers
 {
@@ -22,6 +23,7 @@ namespace apiconsole.Controllers
         }
 
         // GET: api/Addresses
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<Address>> GetAddress()
         {
@@ -47,12 +49,25 @@ namespace apiconsole.Controllers
 
             return Ok(address);
         }
-
+        [Authorize]
         // PUT: api/Addresses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAddress(int id, Address address)
         {
+            AddressValidator validator = new AddressValidator();
+
+            ValidationResult results = validator.Validate(address);
+
+            if (!results.IsValid)
+            {
+
+                foreach (var failure in results.Errors)
+                {
+                    BadRequest("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
+                }
+            }
+
             if (id != address.AddressID)
             {
                 return BadRequest();
@@ -87,12 +102,24 @@ namespace apiconsole.Controllers
 
             return NoContent();
         }
-        [Authorize(Roles = "Pracownik,Administrator,Użytkownik")]
+
         // POST: api/Addresses
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Address>> PostAddress(Address address)
         {
+            AddressValidator validator = new AddressValidator();
+
+            ValidationResult results = validator.Validate(address);
+
+            if (!results.IsValid)
+            {
+
+                foreach (var failure in results.Errors)
+                {
+                    BadRequest("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
+                }
+            }
             var newAddres = new Address
             {
                 AddressID = address.AddressID,
