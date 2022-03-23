@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using consolestoreapi.Models;
 using Microsoft.AspNetCore.Authorization;
 using FluentValidation.Results;
+using MediatR;
+using apiconsole.Handlers;
 
 namespace apiconsole.Controllers
 {
@@ -16,39 +18,30 @@ namespace apiconsole.Controllers
     public class AddressesController : ControllerBase
     {
         private readonly ConsoleStoreDbContext _context;
-
-        public AddressesController(ConsoleStoreDbContext context)
+        private readonly IMediator _mediator;
+        public AddressesController(ConsoleStoreDbContext context, IMediator mediator)
         {
             _context = context;
+            _mediator = mediator;
         }
+
 
         // GET: api/Addresses
-        [Authorize]
+
         [HttpGet]
-        public async Task<ActionResult<Address>> GetAddress()
+        public async Task<ActionResult<Address>> GetAddress() 
         {
-            var userId = this.User.Identity.Name;
-            var address = await _context.Address.Join(_context.Customers.Where(a=>a.UserID==userId),
-                p => p.AddressID,
-                s => s.AddressID, (p, s) => new
-                {
-                    p.AddressID,
-                    p.Street,
-                    p.City,
-                    p.HouseNumber,
-                    p.PostalAddress,
-                    p.FlatNumber
-                }).ToListAsync();
-
-
-
-            if (address == null)
+            if (User.Identity.Name == null)
             {
-                return NotFound();
+                return BadRequest("No User id");
             }
-
-            return Ok(address);
+           return await _mediator.Send(new GetAddressList.Command { Id = User.Identity.Name });
+            
         }
+          
+
+    
+      
         [Authorize]
         // PUT: api/Addresses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

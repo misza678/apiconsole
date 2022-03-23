@@ -23,6 +23,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MediatR;
+using System.Reflection;
 
 namespace apiconsole
 {
@@ -45,10 +47,8 @@ namespace apiconsole
             });
 
 
-
-
             services.AddDbContext<ConsoleStoreDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
-
+          
             services.AddIdentity<ApplicationUser, IdentityRole>(options=>
             {
                 options.SignIn.RequireConfirmedEmail = false;
@@ -79,6 +79,8 @@ namespace apiconsole
                 };
             }
                 );
+            services.AddMediatR(typeof(Startup));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1.1", new OpenApiInfo { Title = "apiconsole", Version = "v1.1" });
