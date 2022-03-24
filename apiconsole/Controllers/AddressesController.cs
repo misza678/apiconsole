@@ -27,16 +27,12 @@ namespace apiconsole.Controllers
 
 
         // GET: api/Addresses
-
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<Address>> GetAddress() 
         {
-            if (User.Identity.Name == null)
-            {
-                return BadRequest("No User id");
-            }
-           return await _mediator.Send(new GetAddressList.Command { Id = User.Identity.Name });
-            
+            return await _mediator.Send(new GetAddressList.Command { Id = User.Identity.Name });
+
         }
           
 
@@ -48,19 +44,7 @@ namespace apiconsole.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAddress(int id, Address address)
         {
-            AddressValidator validator = new AddressValidator();
-
-            ValidationResult results = validator.Validate(address);
-
-            if (!results.IsValid)
-            {
-
-                foreach (var failure in results.Errors)
-                {
-                    BadRequest("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
-                }
-            }
-
+ 
             if (id != address.AddressID)
             {
                 return BadRequest();
@@ -101,33 +85,8 @@ namespace apiconsole.Controllers
         [HttpPost]
         public async Task<ActionResult<Address>> PostAddress(Address address)
         {
-            AddressValidator validator = new AddressValidator();
-
-            ValidationResult results = validator.Validate(address);
-
-            if (!results.IsValid)
-            {
-
-                foreach (var failure in results.Errors)
-                {
-                    BadRequest("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
-                }
-            }
-            var newAddres = new Address
-            {
-                AddressID = address.AddressID,
-                Street = address.Street,
-                City = address.City,
-                HouseNumber = address.HouseNumber,
-                PostalAddress = address.PostalAddress,
-                FlatNumber = address.FlatNumber
-            };
-
-
-            _context.Address.Add(newAddres);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetAddress", new { id = newAddres.AddressID }, newAddres);
+            var addressid= await _mediator.Send(new PostAddressHandler.Command { Address= address });
+            return CreatedAtAction(nameof(PostAddress), new { id = addressid }, null);
         }
 
        

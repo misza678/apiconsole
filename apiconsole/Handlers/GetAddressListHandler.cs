@@ -1,6 +1,9 @@
 ﻿using consolestoreapi.Models;
+using Legacy.Platform.Core.Exceptions;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -28,14 +31,24 @@ namespace apiconsole.Handlers
         public async Task<Address> Handle(Command request, CancellationToken cancellationToken)
         {
           
-            var Id=request.Id;
+                var Id=request.Id;
+                var customer = await _data.Customers.Where(c => c.UserID == Id).FirstOrDefaultAsync();
+                try
+                {
+                    var address = await _data.Address.Where(c => c.AddressID == customer.AddressID).FirstOrDefaultAsync();
+                    return address;
+                }
+                catch (Exception ex)
+                {
+                //jak wywołać w tym miejscu 404? zwraca mi 500
+                    throw new BadRequestException((StatusCodes.Status404NotFound).ToString(),ex);
+                    
+                }
+         
+                
+          
 
-            var customer= await _data.Customers.Where(c=>c.UserID==Id).FirstOrDefaultAsync();
-
-            var address = await _data.Address.Where(c => c.AddressID == customer.AddressID).FirstOrDefaultAsync();
-
-
-            return address;
+           
 
 
         }
