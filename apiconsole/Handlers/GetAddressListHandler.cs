@@ -33,17 +33,10 @@ namespace apiconsole.Handlers
           
                 var Id=request.Id;
                 var customer = await _data.Customers.Where(c => c.UserID == Id).FirstOrDefaultAsync();
-                try
-                {
+                if (customer == null) throw new KeyNotFoundException("Addres not found");
                     var address = await _data.Address.Where(c => c.AddressID == customer.AddressID).FirstOrDefaultAsync();
                     return address;
-                }
-                catch (Exception ex)
-                {
-                //jak wywołać w tym miejscu 404? zwraca mi 500
-                    throw new BadRequestException((StatusCodes.Status404NotFound).ToString(),ex);
-                    
-                }
+              
          
                 
           

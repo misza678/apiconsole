@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Legacy.Platform.Core.Exceptions
 {
@@ -8,6 +9,9 @@ namespace Legacy.Platform.Core.Exceptions
 
         public ApplicationException(string message) : base(message) { }
 
-        public ApplicationException(string message, Exception ex) : base(message, ex) { }
+        public ApplicationException(string message, params object[] args)
+          : base(String.Format(CultureInfo.CurrentCulture, message, args))
+        {
+        }
     }
 }
