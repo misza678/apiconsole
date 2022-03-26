@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using apiconsole.Models.Repair;
 using consolestoreapi.Models;
+using MediatR;
+using apiconsole.Handlers.Products;
 
 namespace apiconsole.Controllers
 {
@@ -14,26 +16,18 @@ namespace apiconsole.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly ConsoleStoreDbContext _context;
-
-        public ProductsController(ConsoleStoreDbContext context)
+        private readonly IMediator _mediator;
+        public ProductsController(IMediator mediator)
         {
-            _context = context;
+            _mediator = mediator;
         }
 
 
         // GET: api/Products/5
         [HttpGet("{CompanyName}")]
-        public async Task<ActionResult<Product>> GetProduct(string CompanyName)
+        public async Task<List<Product>> GetProduct(string CompanyName)
         {
-            var product = await _context.Product.Include(c=>c.Company).Where(p=>p.Company.Name==CompanyName).ToListAsync();
-
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(product);
+           return await _mediator.Send(new GetProductsListHandler.Command { CompanyName = CompanyName });
         }
 
     }

@@ -39,7 +39,11 @@ namespace apiconsole.Exceptions
                             // not found error
                             response.StatusCode = (int)HttpStatusCode.NotFound;
                             break;
-                        default:
+                    case UnauthorizedAccessException e:
+                        // not found error
+                        response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        break;
+                    default:
                             // unhandled error
                             response.StatusCode = (int)HttpStatusCode.InternalServerError;
                             break;

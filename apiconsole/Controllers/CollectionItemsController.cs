@@ -9,6 +9,8 @@ using apiconsole.Models.CollectionCentre;
 using consolestoreapi.Models;
 using Microsoft.AspNetCore.Authorization;
 using FluentValidation.Results;
+using MediatR;
+using apiconsole.Handlers.CollectionItems;
 
 namespace apiconsole.Controllers
 {
@@ -16,148 +18,63 @@ namespace apiconsole.Controllers
     [ApiController]
     public class CollectionItemsController : ControllerBase
     {
-        private readonly ConsoleStoreDbContext _context;
-
-        public CollectionItemsController(ConsoleStoreDbContext context)
+        private readonly IMediator _mediator;
+        public CollectionItemsController(IMediator mediator)
         {
-            _context = context;
+            _mediator = mediator;
         }
+
+
 
         // GET: api/CollectionItems
         [Authorize(Roles = "Pracownik,Administrator")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CollectionItem>>> GetCollectionItem()
         {
-            return  await _context.CollectionItem.Include(c => c.Customer).Include(c => c.Status).Include(c => c.Model).ToListAsync();
+            return await _mediator.Send(new GetCollectionItemsListHandler.Command());
         }
 
 
         // GET: api/CollectionItems/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<CollectionItem>> GetCollectionItem(int id)
         {
-       
 
-            var userId = this.User.Identity.Name;
-            var confirmedRepair = await _context.CollectionItem.Include(c => c.Customer).Where(c => c.Customer.UserID == userId).Include(c => c.Status).Include(c => c.Model).ToListAsync();
-            if (confirmedRepair == null)
-            {
-                return NotFound();
-            }
+            return await _mediator.Send(new GetCollectionItemsByIDHandler.Command { Id = id });
 
-
-
-            return Ok(confirmedRepair);
         }
 
         // PUT: api/CollectionItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize(Roles = "Pracownik,Administrator")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCollectionItem(int id, CollectionItem collectionItem)
+        public async Task<ActionResult<CollectionItem>> PutCollectionItem(int id, CollectionItem collectionItem)
         {
-            CollectionItemValidator validator = new CollectionItemValidator();
 
-            ValidationResult results = validator.Validate(collectionItem);
+         return await _mediator.Send(new PutCollectionItemHandler.Command { Id = id, CollectionItem = collectionItem });
 
-            if (!results.IsValid)
-            {
-
-                foreach (var failure in results.Errors)
-                {
-                    BadRequest("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
-                }
-            }
-
-            if (id != collectionItem.CollectionItemID)
-            {
-                return BadRequest();
-            }
-
-            var newCollectionItem = new CollectionItem
-            {
-                CollectionItemID = collectionItem.CollectionItemID,
-                ModelID = collectionItem.ModelID,
-                CustomerID = collectionItem.CustomerID,
-                WithController = collectionItem.WithController,
-                StatusID = collectionItem.StatusID
-            };
-
-            _context.Entry(newCollectionItem).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CollectionItemExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
         }
 
-        
+
         // POST: api/CollectionItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<CollectionItem>> PostCollectionItem(CollectionItem collectionItem)
         {
-            CollectionItemValidator validator = new CollectionItemValidator();
-
-            ValidationResult results = validator.Validate(collectionItem);
-
-            if (!results.IsValid)
-            {
-
-                foreach (var failure in results.Errors)
-                {
-                    BadRequest("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
-                }
-            }
-
-            var newCollectionItem = new CollectionItem
-            {
-                CollectionItemID = collectionItem.CollectionItemID,
-                ModelID = collectionItem.ModelID,
-                CustomerID = collectionItem.CustomerID,
-                WithController = collectionItem.WithController,
-                StatusID = collectionItem.StatusID
-            };
-            _context.CollectionItem.Add(newCollectionItem);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetCollectionItem", new { id = newCollectionItem.CollectionItemID }, newCollectionItem);
+            return await _mediator.Send(new  PostCollectionItemHandler.Command { CollectionItem = collectionItem });
         }
 
 
         // DELETE: api/CollectionItems/5
         [Authorize(Roles = "Pracownik,Administrator")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCollectionItem(int id)
+        public async Task<Unit> DeleteCollectionItem(int id)
         {
-            var collectionItem = await _context.CollectionItem.FindAsync(id);
-            if (collectionItem == null)
-            {
-                return NotFound();
-            }
-
-            _context.CollectionItem.Remove(collectionItem);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+           return await _mediator.Send(new DeleteCollectionItemHandler.Command { Id = id});
         }
 
-        private bool CollectionItemExists(int id)
-        {
-            return _context.CollectionItem.Any(e => e.CollectionItemID == id);
-        }
+
     }
 }
+

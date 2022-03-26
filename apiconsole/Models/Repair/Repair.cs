@@ -32,18 +32,7 @@ namespace consolestoreapi.Models
         public Status Status { get; set; }
         }
     
-    public class RepairValidator : AbstractValidator<Repair>
-    {
-        public RepairValidator()
-        {
-            RuleFor(t => t.ModelID).NotEmpty().WithMessage("ModelID can't be empty").GreaterThanOrEqualTo(1).WithMessage("ModelID must be greather or equal 1");
-            RuleFor(t => t.ShippingMetodID).NotEmpty().WithMessage("ShippingMetodID can't be empty").GreaterThanOrEqualTo(1).WithMessage("ShippingMetodID must be greather or equal 1");
-            RuleFor(t => t.CustomerID).NotEmpty().WithMessage("CustomerID can't be empty").GreaterThanOrEqualTo(1).WithMessage("CustomerID must be greather or equal 1");
-            RuleFor(t => t.DefectID).NotEmpty().WithMessage("DefectID can't be empty").GreaterThanOrEqualTo(1).WithMessage("DefectID must be greather or equal 1");
-            RuleFor(t => t.StatusID).NotEmpty().WithMessage("StatusID can't be empty").GreaterThanOrEqualTo(1).WithMessage("StatusID must be greather or equal 1");
-        }
-       
-    }
+  
 
 
 }

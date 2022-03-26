@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using consolestoreapi.Models;
 using Microsoft.AspNetCore.Authorization;
 using FluentValidation.Results;
+using MediatR;
+using apiconsole.Handlers.Repairs;
 
 namespace apiconsole.Controllers
 {
@@ -15,99 +17,43 @@ namespace apiconsole.Controllers
     [ApiController]
     public class RepairsController : ControllerBase
     {
-        private readonly ConsoleStoreDbContext _context;
-
-        public RepairsController(ConsoleStoreDbContext context)
+        private readonly IMediator _mediator;
+        public RepairsController(IMediator mediator)
         {
-            _context = context;
+            _mediator = mediator;
         }
 
         // GET: api/Repairs
         [Authorize(Roles = "Pracownik,Administrator")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Repair>>> GetRepair()
+        public async Task<ICollection<Repair>> GetRepair()
         {
-            return await _context.Repair.Include(c => c.Customer).Include(c => c.Status).Include(c => c.Model).ToListAsync();
+            return await _mediator.Send(new GetRepairListHandler.Command());
         }
-        [Authorize]
-        // GET: api/Repairs/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Repair>> GetRepair(int id)
-        {
-            
-            var userId = this.User.Identity.Name;
-            if (userId == null)
-            {
-                var repair = await _context.Repair.FindAsync(id);
-                if (repair == null)
-                {
-                    return NotFound();
-                }
-              
-                return repair;
-            }
-            var confirmedRepair = await _context.Repair.Include(c => c.Customer).Where(c => c.Customer.UserID == userId).Include(c=>c.Status).Include(c=>c.Model).ToListAsync();
-            if (confirmedRepair == null)
-            {
-                return NotFound();
-            }
 
-            return Ok(confirmedRepair);
+        [Authorize]
+        [HttpGet]
+        [Route("api/ByUserId")]
+        public async Task<ICollection<Repair>> GetRepairByUserId()
+        {
+            return await _mediator.Send(new GetRepairsByUserIDHandler.Command { UserID = User.Identity.Name });  
         }
+
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task<Repair> GetRepair(int id)
+        {
+            return await _mediator.Send(new GetRepairByIDHandler.Command { ID = id });
+           
+            }
 
         // PUT: api/Repairs/5
         [Authorize(Roles = "Pracownik,Administrator")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRepair(int id, Repair repair)
+        public async Task<ActionResult<Repair>> PutRepair(int id, Repair repair)
         {
-            RepairValidator validator = new RepairValidator();
-
-            ValidationResult results = validator.Validate(repair);
-
-            if (!results.IsValid)
-            {
-
-                foreach (var failure in results.Errors)
-                {
-                    BadRequest("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
-                }
-            } 
-
-            if (id != repair.RepairID)
-            {
-                return BadRequest();
-            }
-
-            var newRepair = new Repair
-            {
-                RepairID = repair.RepairID,
-                CustomerID = repair.CustomerID,
-                StatusID = repair.StatusID,
-                ShippingMetodID = repair.ShippingMetodID,
-                ModelID = repair.ModelID,
-                DefectID = repair.DefectID,
-                Description = repair.Description,
-                Price = repair.Price,
-            };
-            _context.Entry(newRepair).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RepairExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return await _mediator.Send(new PutRepairHandler.Command { Id = id, Repair = repair });
+            
         }
 
 
@@ -115,54 +61,18 @@ namespace apiconsole.Controllers
         [HttpPost]
         public async Task<ActionResult<Repair>> PostRepair(Repair repair)
         {
-            RepairValidator validator = new RepairValidator();
-
-            ValidationResult results = validator.Validate(repair);
-
-            if (!results.IsValid)
-            {
+            return await _mediator.Send(new PostRepairHandler.Command { Repair=repair });
              
-                foreach (var failure in results.Errors)
-                {
-                    BadRequest("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
-                }
-            }
-
-                var newRepair = new Repair {
-                RepairID = repair.RepairID,
-                CustomerID = repair.CustomerID,
-                StatusID = repair.StatusID,
-                ShippingMetodID = repair.ShippingMetodID,
-                ModelID = repair.ModelID,
-                DefectID = repair.DefectID,
-                Description = repair.Description,
-                Price = repair.Price       
-            };
-            _context.Repair.Add(newRepair);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetRepair", new { id = newRepair.RepairID }, newRepair);
         } 
 
         // DELETE: api/Repairs/5
         [Authorize(Roles = "Pracownik,Administrator")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRepair(int id)
+        public async Task<Unit> DeleteRepair(int id)
         {
-            var repair = await _context.Repair.FindAsync(id);
-            if (repair == null)
-            {
-                return NotFound();
-            }
-            _context.Repair.Remove(repair);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return await _mediator.Send(new DeleteRepairHandler.Command { RepairId = id });
         }
 
-        private bool RepairExists(int id)
-        {
-            return _context.Repair.Any(e => e.RepairID == id);
-        }
+      
     }
 }

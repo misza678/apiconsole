@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using apiconsole.Models;
 using consolestoreapi.Models;
+using apiconsole.Handlers.Models;
+using MediatR;
+using System.Collections.Generic;
 
 namespace apiconsole.Controllers
 {
@@ -14,26 +15,18 @@ namespace apiconsole.Controllers
     [ApiController]
     public class ModelsController : ControllerBase
     {
-        private readonly ConsoleStoreDbContext _context;
-
-        public ModelsController(ConsoleStoreDbContext context)
+        private readonly IMediator _mediator;
+        public ModelsController(IMediator mediator)
         {
-            _context = context;
+            _mediator = mediator;
         }
 
- 
+
         // GET: api/Models/5
         [HttpGet("{id}/{Category}")]
-        public async Task<ActionResult<Model>> GetModel(int id,string Category)
+        public async Task<List<Model>> GetModel(int id,string Category)
         {
-            var model = await _context.Models.Where(c=>c.ProductID==id).Include(c=>c.Category).Where(c=>c.Category.Name==Category).ToListAsync();
-
-            if (model == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(model);
+            return await _mediator.Send(new GetModelsListHandler.Command { ProductID = id, CategoryName = Category });
         }
 
       

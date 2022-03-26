@@ -12,18 +12,18 @@ using System.Threading.Tasks;
 
 namespace apiconsole.Handlers
 {
-    public class GetAddressList
+    public class GetAddressHandler
     {
 
         public class Command : IRequest<Address>
         {
             public string Id { get; set; }
         }
-        public class GetAddressHandler : IRequestHandler<Command, Address>
+        public class GetAddress : IRequestHandler<Command, Address>
         { 
         private readonly ConsoleStoreDbContext _data;
 
-        public GetAddressHandler(ConsoleStoreDbContext data)
+        public GetAddress(ConsoleStoreDbContext data)
         {
             _data = data;
         }

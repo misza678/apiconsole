@@ -15,15 +15,15 @@ namespace apiconsole.Handlers
         public class PostAddressHandler
         {
 
-            public class Command : IRequest<int>
+            public class Command : IRequest<Address>
             {
                 public Address Address { get; set; }
             }
-            public class GetAddressHandler : IRequestHandler<Command, int>
+            public class PostAddress : IRequestHandler<Command, Address>
             {
                 private readonly ConsoleStoreDbContext _data;
 
-                public GetAddressHandler(ConsoleStoreDbContext data)
+                public PostAddress(ConsoleStoreDbContext data)
                 {
                     _data = data;
                 }
@@ -39,7 +39,7 @@ namespace apiconsole.Handlers
                 }
 
             }
-            public async Task<int> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Address> Handle(Command request, CancellationToken cancellationToken)
                 {
 
                 var newAddres = new Address
@@ -55,7 +55,7 @@ namespace apiconsole.Handlers
                 _data.Address.Add(newAddres);
                 await _data.SaveChangesAsync();
 
-                return newAddres.AddressID ;
+                return newAddres;
 
             }
             }

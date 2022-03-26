@@ -19,10 +19,6 @@ namespace consolestoreapi.Models
 
         }
 
-       
-
-
-
         public DbSet<Product> Product { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Company> Company { get; set; }
@@ -35,6 +31,8 @@ namespace consolestoreapi.Models
         public DbSet<CollectionItem> CollectionItem { get; set; }
         public DbSet<Images> Images { get; set; }
         public DbSet<Model> Models { get; set; }
+        public DbSet<DefectModel> DefectModel { get; set; }
+        public DbSet<Status> Status { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -48,10 +46,7 @@ namespace consolestoreapi.Models
        .WithOne(e => e.CollectionItem);
         }
 
-        public DbSet<apiconsole.Models.Repair.DefectModel> DefectModel { get; set; }
 
-        public DbSet<apiconsole.Models.Other.Status> Status { get; set; }
-       
 
     }
 }

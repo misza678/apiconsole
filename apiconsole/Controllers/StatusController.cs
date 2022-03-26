@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using apiconsole.Models.Other;
 using consolestoreapi.Models;
+using MediatR;
+using apiconsole.Handlers.Statuses;
 
 namespace apiconsole.Controllers
 {
@@ -14,32 +16,25 @@ namespace apiconsole.Controllers
     [ApiController]
     public class StatusController : ControllerBase
     {
-        private readonly ConsoleStoreDbContext _context;
 
-        public StatusController(ConsoleStoreDbContext context)
+        private readonly IMediator _mediator;
+        public StatusController(IMediator mediator)
         {
-            _context = context;
+            _mediator = mediator;
         }
 
         // GET: api/Status
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Status>>> GetStatus()
+        public async Task<IEnumerable<Status>> GetStatus()
         {
-            return await _context.Status.ToListAsync();
+            return await _mediator.Send(new GetStatusListHandler.Command());
         }
 
         // GET: api/Status/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Status>> GetStatus(int id)
         {
-            var status = await _context.Status.FindAsync(id);
-
-            if (status == null)
-            {
-                return NotFound();
-            }
-
-            return status;
+            return await _mediator.Send(new GetStatusByIdHandler.Command { Id = id });
         }
 
  

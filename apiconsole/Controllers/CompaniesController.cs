@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using consolestoreapi.Models;
 using Microsoft.AspNetCore.Authorization;
+using MediatR;
+using apiconsole.Handlers.Companies;
 
 namespace apiconsole.Controllers
 {
@@ -14,19 +16,18 @@ namespace apiconsole.Controllers
     [ApiController]
     public class CompaniesController : ControllerBase
     {
-        private readonly ConsoleStoreDbContext _context;
-
-        public CompaniesController(ConsoleStoreDbContext context)
+        private readonly IMediator _mediator;
+        public CompaniesController(IMediator mediator)
         {
-            _context = context;
+            _mediator = mediator;
         }
 
         // GET: api/Companies
-        
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Company>>> GetCompany()
         {
-            return await _context.Company.ToListAsync();
+            return await _mediator.Send(new GetCompaniesListHandler.Command());
         }
 
        

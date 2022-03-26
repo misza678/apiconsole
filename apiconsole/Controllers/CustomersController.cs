@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using consolestoreapi.Models;
 using Microsoft.AspNetCore.Authorization;
 using FluentValidation.Results;
+using MediatR;
+using apiconsole.Handlers.Customers;
 
 namespace apiconsole.Controllers
 {
@@ -15,157 +17,46 @@ namespace apiconsole.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly ConsoleStoreDbContext _context;
-
-        public CustomersController(ConsoleStoreDbContext context)
+        private readonly IMediator _mediator;
+        public CustomersController(IMediator mediator)
         {
-            _context = context;
+            _mediator = mediator;
+        }
+
+
+
+        // GET: api/Customers
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<Customer>> GetCustomerById()
+        {
+            return await _mediator.Send(new GetCustomerByUserIdHandler.Command { Id = User.Identity.Name });
         }
 
         // GET: api/Customers/5
+        [Authorize(Roles = "Pracownik,Administrator")]
         [HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetCustomer(int id)
         {
-            if(id == 0)
-            {
-                var userId = this.User.Identity.Name;
-                if (userId == null)
-                {
-                    return NotFound();
-                }
-            
-                var customer2 = await _context.Address.Join(_context.Customers.Where(a => a.UserID == userId),
-               p => p.AddressID,
-               s => s.AddressID, (p, s) => new
-               {
-                   s.Name,
-                   s.LastName,
-                   s.Phone,
-                   s.Email,
-                   s.CustomerID,
-                   p.AddressID,
-                   p.Street,
-                   p.City,
-                   p.HouseNumber,
-                   p.PostalAddress,
-                   p.FlatNumber
-               }).ToListAsync();
-
-
-                if (customer2 == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(customer2);
-            }
-       
-            var customer = await _context.Customers.FindAsync(id);
-
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
-            return customer;
+            return await _mediator.Send(new GetCustomerByIdHandler.Command { Id = id });
         }
-    
-
-    // PUT: api/Customers/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
-        public async Task<IActionResult> PutCustomer(int id, Customer customer)
-        {
 
 
-            CustomerValidator validator = new CustomerValidator();
-
-            ValidationResult results = validator.Validate(customer);
-
-            if (!results.IsValid)
-            {
-                foreach (var failure in results.Errors)
-                {
-                    BadRequest("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
-                }
-            }
-
-            var newCustomer = new Customer()
-            {
-                CustomerID = customer.CustomerID,
-                Name = customer.Name,
-                LastName = customer.LastName,
-                Email = customer.Email,
-                UserID = this.User.Identity.Name,
-                Phone = customer.Phone,
-                AddressID = customer.AddressID,
-            };
-
-            if (id != newCustomer.CustomerID)
-            {
-                return BadRequest();
-            }
-          
-            _context.Entry(newCustomer).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CustomerExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
+        // PUT: api/Customers/5
         [Authorize]
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Customer>> PutCustomer(int id, Customer customer)
+        {
+            return await _mediator.Send(new PutCustomerHandler.Command { CustomerID = id, Customer = customer, Id = User.Identity.Name });        
+        }
+
+
+      
         // POST: api/Customers
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
         {
-            CustomerValidator validator = new CustomerValidator();
-
-            ValidationResult results = validator.Validate(customer);
-
-            if (!results.IsValid)
-            {
-                foreach (var failure in results.Errors)
-                {
-                    BadRequest("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
-                }
-            }
-
-            var newCustomer = new Customer()
-            {
-                CustomerID = customer.CustomerID,
-                Name=customer.Name,
-                LastName=customer.LastName,
-                Email=customer.Email,
-                UserID= this.User.Identity.Name,
-                Phone=customer.Phone,
-                AddressID=customer.AddressID,
-        };
-
-
-            _context.Customers.Add(newCustomer);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetCustomer", new { id = customer.CustomerID }, customer);
-        }
-
-
-        private bool CustomerExists(int id)
-        {
-            return _context.Customers.Any(e => e.CustomerID == id);
+            return await _mediator.Send(new PostCustomerHandler.Command { Customer=customer , Id = User.Identity.Name});
         }
     }
 }
