@@ -12,9 +12,9 @@ using apiconsole.Models.Other;
 
 namespace consolestoreapi.Models
 {
-    public class ConsoleStoreDbContext:IdentityDbContext<ApplicationUser>
+    public class ConsoleStoreDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ConsoleStoreDbContext(DbContextOptions<ConsoleStoreDbContext>options):base(options)
+        public ConsoleStoreDbContext(DbContextOptions<ConsoleStoreDbContext> options) : base(options)
         {
 
         }
@@ -29,7 +29,6 @@ namespace consolestoreapi.Models
         public DbSet<Product> Products { get; set; }
         public DbSet<Defect> Defect { get; set; }
         public DbSet<CollectionItem> CollectionItem { get; set; }
-        public DbSet<Images> Images { get; set; }
         public DbSet<Model> Models { get; set; }
         public DbSet<DefectModel> DefectModel { get; set; }
         public DbSet<Status> Status { get; set; }
@@ -39,14 +38,11 @@ namespace consolestoreapi.Models
             base.OnModelCreating(builder);
             builder.Entity<Model>().HasMany(p => p.Defects).WithMany(p => p.Models).UsingEntity<DefectModel>(j => j.HasOne(pt => pt.Defect).WithMany(t => t.DefectModels).HasForeignKey(pt => pt.DefectID),
             j => j.HasOne(pt => pt.Model).WithMany(t => t.DefectModels).HasForeignKey(pt => pt.ModelID),
-            j => { j.HasKey(t => new { t.ModelID, t.DefectID }); 
+            j =>
+            {
+                j.HasKey(t => new { t.ModelID, t.DefectID });
             });
-            builder.Entity<CollectionItem>()
-       .HasMany(c => c.Images)
-       .WithOne(e => e.CollectionItem);
+
         }
-
-
-
     }
 }

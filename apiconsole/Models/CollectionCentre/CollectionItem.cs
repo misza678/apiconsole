@@ -16,7 +16,6 @@ namespace apiconsole.Models.CollectionCentre
     {
         [Key]
         public int CollectionItemID { get; set; }
-        public ICollection<Images> Images { get; set; }
         [Required]
         public int ModelID { get; set; }
         public Model Model { get; set; }

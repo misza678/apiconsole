@@ -45,6 +45,13 @@ namespace apiconsole.Controllers
 
         }
 
+        [Authorize]
+        [HttpGet]
+        [Route("api/ByUserId")]
+        public async Task<ICollection<CollectionItem>> GetCollectionItemUserId()
+        {
+            return await _mediator.Send(new GetCollectionItemByUserHandler.Command { UserID = User.Identity.Name });
+        }
         // PUT: api/CollectionItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize(Roles = "Pracownik,Administrator")]
